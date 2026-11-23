@@ -5,6 +5,7 @@ The whole entry is one line of at most 240 characters. It is written to
 against the other entries, two at a time.
 """
 
+import os
 from pathlib import Path
 
 LINE = (
@@ -17,9 +18,11 @@ OUTPUT = Path("/output/entry.txt")
 
 
 def main() -> None:
+    # make.fun collects outputs as a different user than the one running this
+    # program, so create the artifact world-readable from the start.
+    os.umask(0o022)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(LINE, encoding="utf-8")
-    # make.fun collects outputs as a different user; keep the artifact readable.
     OUTPUT.chmod(0o644)
 
 
